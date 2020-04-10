@@ -4,7 +4,7 @@ python3 -m pip install wget
 
 python3 -m pip install requirements.txt
 
-python3 Z.py
+python3 GO.py
 
 
 
