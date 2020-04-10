@@ -12,7 +12,7 @@
 
 instruction :
 1- git clone 
-https://github.com/kotik06/Zframe/tree/master/Z/utils 
+https://github.com/kotik06/Zframe/
 2-run go.py
 or check Z/instrctions/instructions.txt
 good luck =)
