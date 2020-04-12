@@ -136,7 +136,7 @@ elif num == (12):
     print(Fore.GREEN + 'Starting DDOS')
     os.system('clear')
     os.chdir('DDos')
-        print (Fore.LIGHTBLUE_EX+"""Enter port [1]-80 or [2]-443""")
+    print (Fore.LIGHTBLUE_EX+"""Enter port [1]-80 or [2]-443""")
     pod = int(input(''))
     if pod == (1) or pod == (80):
         os.system('python3 80port.py')
