@@ -141,7 +141,7 @@ elif num == (13):
     print(Fore.GREEN + 'Starting DDOS')
     os.system('clear')
     os.chdir('DDos')
-        print (Fore.LIGHTBLUE_EX+"""Enter port [1]-80 or [2]-443""")
+    print (Fore.LIGHTBLUE_EX+"""Enter port [1]-80 or [2]-443""")
     pod = int(input(''))
     if pod == (1) or pod == (80):
         os.system('python3 80port.py')
@@ -154,15 +154,14 @@ elif num == (14):
     num = str(input(''))
     if num == ('1'):
         print(Fore.LIGHTBLUE_EX+'Какая ОС?')
-        print(Fore.LIGHTRED_EX+"""[1]-android 
-        [2]-Linux""")
+        print(Fore.LIGHTRED_EX+"""[1]-android [2]-Linux""")
        
         osy = int(input(''))
         port = str(input('Порт:'))
         if osy == (1):
-            os.system('./ngroka'+port)
+            os.system('./ngroka '+port)
         elif osy == (2):
-            os.system('./ngrok'+port)
+            os.system('./ngrok '+port)
 
         port = str(input())
         os.system('./ngrok http '+ port)
