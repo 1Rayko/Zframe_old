@@ -122,9 +122,9 @@ elif num == (9):
 	os.chdir('kingfish-master')
 	os.system('python3 fsh.py')
 elif num == (10):
-	print(Fore.GREEN+'Запуск kingfish')
+	print(Fore.GREEN+'Запуск kingfish2.0')
 	os.system('clear')
-	os.chdir('kingfish-master')
+	os.chdir('kingfish2-master')
 	os.system('python3 fsh.py')
 elif num == (11):
     print (Fore.GREEN + 'Запуск smsham')
