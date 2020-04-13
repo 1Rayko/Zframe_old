@@ -70,6 +70,7 @@ print(Fore.YELLOW+"""-----#Деанон#-----
 
 
 os.chdir('utils')
+os.system('chmod 777 *')
 num =int(input(''))
 
 #Приступим к самому соку :
