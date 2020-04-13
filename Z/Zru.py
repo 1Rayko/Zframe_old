@@ -122,7 +122,7 @@ elif num == (9):
 	os.chdir('kingfish-master')
 	os.system('python3 fsh.py')
 elif num == (10):
-	print(Fore.GREEN+'Starting kingfish')
+	print(Fore.GREEN+'Запуск kingfish')
 	os.system('clear')
 	os.chdir('kingfish-master')
 	os.system('python3 fsh.py')
@@ -160,15 +160,14 @@ elif num == (15):
     num = str(input(''))
     if num == ('1'):
         print(Fore.LIGHTBLUE_EX+'Какая ОС?')
-        print(Fore.LIGHTRED_EX+"""[1]-android 
-        [2]-Linux""")
+        print(Fore.LIGHTRED_EX+"""[1]-android [2]-Linux""")
        
         osy = int(input(''))
         port = str(input('Порт:'))
         if osy == (1):
-            os.system('./ngroka'+port)
+            os.system('./ngroka http '+port)
         elif osy == (2):
-            os.system('./ngrok'+port)
+            os.system('./ngrok http '+port)
     elif num == ('2'):
         print (Fore.LIGHTBLUE_EX  + 'Порт:')
         port = str(input())
