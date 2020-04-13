@@ -13,6 +13,6 @@
 instruction :
 1- git clone 
 https://github.com/kotik06/Zframe/
-2-run go.py
+2-run GO.py
 or check Z/instrctions/instructions.txt
 good luck =)
