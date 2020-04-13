@@ -159,9 +159,9 @@ elif num == (14):
         osy = int(input(''))
         port = str(input('Порт:'))
         if osy == (1):
-            os.system('./ngroka '+port)
+            os.system('./ngroka http '+port)
         elif osy == (2):
-            os.system('./ngrok '+port)
+            os.system('./ngrok http '+port)
     elif num == ('2'):
         print (Fore.LIGHTBLUE_EX  + 'Порт:')
         port = str(input())
