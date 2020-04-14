@@ -159,7 +159,7 @@ elif num == (15):
     print (Back.WHITE +Fore.BLUE  + '1 - ngrok or 2 - localhost.run')
     num = str(input(''))
     if num == ('1'):
-        print(Fore.LIGHTBLUE_EX+'Какая ОС?')
+        print(Fore.LIGHTBLUE_EX+'You OS?')
         print(Fore.LIGHTRED_EX+"""[1]-android [2]-Linux""")
        
         osy = int(input(''))
