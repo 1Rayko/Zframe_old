@@ -13,6 +13,8 @@
 instruction :
 1- git clone 
 https://github.com/kotik06/Zframe/
-2-run GO.py
-or check Z/instrctions/instructions.txt
+2-bash install.sh or ./install.sh
+3- python3 -m pip install -r requirements.txt
+4 -run GO.py
+
 good luck =)
