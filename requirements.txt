@@ -16,3 +16,9 @@ fake_useragent
 ratelimiter
 cloudscraper
 pysocks     
+vk
+vk_api
+colorama
+bs4
+pysocks
+prettytable
