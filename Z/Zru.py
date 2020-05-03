@@ -156,7 +156,7 @@ while True:
             print(Fore.RED+'ОШИБКА')
 
       
-    elif num == ('15):
+    elif num == ('15'):
         print (Back.WHITE +Fore.BLUE  + '1 - ngrok или 2 - localhost.run')
         while True:
             num = str(input("\033[35m\033[5m[*]"))
