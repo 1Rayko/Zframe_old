@@ -1,6 +1,8 @@
 import os
 import colorama
 from colorama import Fore , Back , Style
+from colorama import init
+init()
 os.system('clear')
 print(Fore.GREEN +
 """ ____  ____                  
@@ -9,15 +11,16 @@ print(Fore.GREEN +
 /___/_/ /_/  \_,_/_/_/_/\__/ 
                             """)
 print(Fore.GREEN+'Enter Lang :')
-print(Fore.RED+'['+Fore.YELLOW+'1'+Fore.RED+'] - RUS/РУС')
-print(Fore.RED+'['+Fore.YELLOW+'2'+Fore.RED+'] - ENG/АНГ')
+print("\033[31m[\033[33m1\033[31m] - RUS/РУС")
+print("\033[31m[\033[33m2\033[31m] - ENG/АНГ")
 os.chdir('Z')
-lag = input()
-if lag == ('1'):
-    os.system('clear')
-    os.system('python3 Zru.py')
-elif lag == ('2'):
-    os.system('clear')
-    os.system('python3 Zen.py')
-else :
-    print(Fore.RED+'RETURN')
+while True:
+    lag = input("\033[35m\033[5m[*]")
+    if lag == ('1'):
+        os.system('cler')
+        os.system('python3 Zru.py')
+    elif lag == ('2'):
+        os.system('clear')
+        os.system('python3 Zen.py')
+    else :
+        print("\33[31mRETURN)
