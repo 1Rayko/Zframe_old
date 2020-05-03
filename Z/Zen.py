@@ -172,8 +172,8 @@ while True:
             elif num == ('2'):
                 os.system('ssh -R 80:localhost:'+port+' ssh.localhost.run')
             else :
-                print(Fore.RED +'ОШИБКА')
+                print(Fore.RED +'RETURN')
     else :
-      print(Fore.RED +'ОШИБКА')
+      print(Fore.RED +'RETURN')
 
 
