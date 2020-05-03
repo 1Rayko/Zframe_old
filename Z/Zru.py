@@ -103,7 +103,7 @@ while True:
 	    os.system('clear')
 	    os.system('python3 dean.py')
     elif num == ('6'):
-        print(Fore.FREEN+'Запуск Defnie')
+        print(Fore.GREEN+'Запуск Defnie')
         os.chdir('define-master')
         os.system('clear')
         os.system('php define.php')
