@@ -155,7 +155,7 @@ while True:
         else:
             print(Fore.RED+'ОШИБКА')
 
-      print(Fore.RED +'ОШИБКА')
+
     elif num == (15):
         print (Back.WHITE +Fore.BLUE  + '1 - ngrok или 2 - localhost.run')
         while True:
