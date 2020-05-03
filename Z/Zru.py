@@ -171,6 +171,8 @@ while True:
                 elif osy == (2):
                     os.system('./ngrok http '+port)
             elif num == ('2'):
+                print (Fore.LIGHTBLUE_EX  + 'Port:')
+                port = str(input("\033[35m\033[5m[*]"))
                 os.system('ssh -R 80:localhost:'+port+' ssh.localhost.run')
             else :
                 print(Fore.RED +'ОШИБКА')
