@@ -75,75 +75,75 @@ os.chdir('utils')
 
 #
 while True:
-    num =int(input("\033[35m\033[5m[*]"))
-    if num == (1) :
+    num =str(input("\033[35m\033[5m[*]"))
+    if num == ('1') :
         print (Fore.GREEN + 'Starting Saycheese')
         os.system('clear')
         os.chdir('saycheese-master')
         os.system('bash saycheese.sh')
-    elif num == (2):
+    elif num == ('2'):
         print (Fore.GREEN + 'Starting Seeker')
         os.system('clear')
         os.chdir('seeker-master')
         os.system('python3 seeker.py -t manual')
-    elif num == (3):
+    elif num == ('3'):
         print (Fore.GREEN + 'Starting sayhello')
         os.system('clear')
         os.chdir('sayhello-master')
         os.system('bash sayhello.sh')
-    elif num == (4):
+    elif num == ('4'):
         print (Fore.GREEN + 'Starting sherlock')
         os.system('clear')
         os.chdir('sherlock-master')
         os.system('python3 sherl.py')
-    elif num == (5):
+    elif num == ('5'):
 	    print(Fore.GREEN+"Starting deanons")
 	    os.chdir('deanons-master')
 	    os.system('clear')
 	    os.system('python3 dean.py')
-    elif num == (6):
+    elif num == ('6'):
         print(Fore.GREEN + 'Starting VTOOL')
         os.system('clear')
         os.chdir('vtool-master')
         os.system('python3 vtool.py')
-    elif num == (7) :
+    elif num == ('7') :
         print(Fore.GREEN + 'Starting VKBRUTE')
         os.system('clear')
         os.chdir('vtool-master')
         os.system('python3 brute.py')
-    elif num == (8):
+    elif num == ('8'):
         print(Fore.YELLOW+'Starting VKtoPasswd')
         os.chdir('VkToPassword-master')
         os.system('clear')
         os.system('python3 vtp.py')
-    elif num == (9):
+    elif num == ('9'):
 	    print(Fore.GREEN+'Starting kingfish')
 	    os.system('clear')
 	    os.chdir('kingfish-master')
 	    os.system('python3 fsh.py')
-    elif num == (10):
+    elif num == ('10'):
 	    print(Fore.GREEN+'Starting kingfish2.0')
 	    os.system('clear')
 	    os.chdir('kingfish2-master')
 	    os.system('python3 fsh.py')
-    elif num == (11):
+    elif num == ('11'):
         print (Fore.GREEN + 'Starting smsham')
         os.system('clear')
         os.chdir('smsham-master')
         os.system('python3 smsham.py')
 
-    elif num == (12):
+    elif num == ('12'):
         print(Fore.GREEN+'Starting spymmer')
         os.system('clear')
         os.chdir('spymer-master')
         os.system('python3 spammer.py')
-    elif num == (13) :
+    elif num == ('13') :
         print (Fore.GREEN + 'Starting Recreator Phishing')
         os.system ('clear')
         os.chdir ('Recreator-Phishing-master')
         os.system ('python3 recreator-phishing.py')
 
-    elif num == (14):
+    elif num == ('14'):
         print(Fore.GREEN + 'Starting DDOS')
         os.system('clear')
         os.chdir('DDos')
@@ -155,7 +155,7 @@ while True:
             os.system('python3 443port.py')
         else:
             print(Fore.RED+'RETURN')
-    elif num == (15):
+    elif num == ('15'):
         print (Back.WHITE +Fore.BLUE  + '1 - ngrok or 2 - localhost.run')
         while True:
             num = str(input("\033[35m\033[5m[*]"))
