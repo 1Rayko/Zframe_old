@@ -85,7 +85,9 @@ while True:
         print (Fore.GREEN + 'Запуск Seeker')
         os.system('clear')
         os.chdir('seeker-master')
-        os.system('python3 seeker.py -t manual')
+ 	os.system('chmod 777 chmod 777 template/nearyou/php/info.txt')
+	os.system('chmod 777 template/nearyou/php/result.txt')
+	os.system('python3 seeker.py -t manual')
     elif num == ('3'):
         print (Fore.GREEN + 'Запуск sayhello')
         os.system('clear')
