@@ -84,7 +84,7 @@ while True:
     elif num == ('2'):
         print (Fore.GREEN + 'Starting Seeker')
         os.system('clear')
-	os.chdir('seeker-master')
+        os.chdir('seeker-master')
         os.system('chmod 777 template/nearyou/php/info.txt')
         os.system('chmod 777 template/nearyou/php/result.txt')
         os.system('python3 seeker.py -t manual')
