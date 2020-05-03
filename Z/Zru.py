@@ -162,7 +162,7 @@ while True:
             num = str(input("\033[35m\033[5m[*]"))
             if num == ('1'):
                 print(Fore.LIGHTBLUE_EX+'КАКАЯ ОС?')
-                print(Fore.LIGHTRED_EX+"""[1]-android [2]-Linux""")
+                print(Fore.LIGHTRED_EX+"[1]-android"+\n+"[2]-Linux")
                 osy = int(input("\033[35m\033[5m[*]"))
                 print (Fore.LIGHTBLUE_EX  + 'Порт:')
                 port = str(input("\033[35m\033[5m[*]"))
