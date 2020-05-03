@@ -23,4 +23,4 @@ while True:
         os.system('clear')
         os.system('python3 Zen.py')
     else :
-        print("\33[31mRETURN)
+        print("\33[31mRETURN")
