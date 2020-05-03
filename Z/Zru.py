@@ -116,7 +116,7 @@ while True:
         os.chdir('VkToPassword-master')
         os.system('clear')
         os.system('python3 vtp.py')
-    elif num == (9'):
+    elif num == ('9'):
 	    print(Fore.GREEN+'Запуск kingfish')
 	    os.system('clear')
 	    os.chdir('kingfish-master')
