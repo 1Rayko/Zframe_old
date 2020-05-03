@@ -106,7 +106,7 @@ while True:
         os.system('clear')
         os.chdir('vtool-master')
         os.system('python3 vtool.py')
-    lif num == (7) :
+    elif num == (7) :
         print(Fore.GREEN + 'Starting VKBRUTE')
         os.system('clear')
         os.chdir('vtool-master')
