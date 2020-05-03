@@ -17,7 +17,7 @@ os.chdir('Z')
 while True:
     lag = input("\033[35m\033[5m[*]")
     if lag == ('1'):
-        os.system('cler')
+        os.system('clear')
         os.system('python3 Zru.py')
     elif lag == ('2'):
         os.system('clear')
