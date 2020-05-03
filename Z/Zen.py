@@ -58,7 +58,7 @@ print(Fore.YELLOW+"""-----#deanonymization#-----
 -----#Utils for VK#-----
 [6] - VTOOL
 [7] - VKBRUTE
-[8] - VK DNK 
+[8] - VK To Password 
 [9] - kingfish
 [10] - kingfish2.0
 -----#others#-----
