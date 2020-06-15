@@ -4,14 +4,10 @@
 
 СОЗДАННО ИСКЛЧИТЕЛЬНО В ОЗНОКОМИТЕЛЬНЫХ ЦЕЛЯХ.
 
-AUTHOR :  @sudoreboot2020
+AUTHOR :  @sudoreboot2020 ;
 SUPPORT : alonesain
-В папке "utils" находятся исходники всего , что есть в утилите и  даже что будет в ней...
 
-Всем удачи
-
-
-instruction :
+# instruction :
 1- git clone 
 https://github.com/kotik06/Zframe/
 2 - cd Zframe
