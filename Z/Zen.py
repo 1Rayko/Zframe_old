@@ -47,7 +47,7 @@ print(Fore.GREEN +
  / /_/ _// __/ _ `/  ' \/ -_)
 /___/_/ /_/  \_,_/_/_/_/\__/
                             """)
-print(Fore.BLUE +Back.WHITE + 'Author : sudoreboot2020')
+print(Fore.BLUE +Back.WHITE + 'Author : sudoreboot2020, Editor : alonesain')
 print(Fore.RED + 'Set option :')
 print(Fore.YELLOW+"""-----#deanonymization#-----
 [1] - Saycheese
@@ -56,18 +56,24 @@ print(Fore.YELLOW+"""-----#deanonymization#-----
 [4] - sherlock 
 [5] - Deanons
 [6] - define
------#Utils for VK#-----
 [7] - VTOOL
 [8] - VKBRUTE
 [9] - VK DNK 
 [10] - kingfish
 [11] - kingfish2.0
------#others#-----
-[12]- smsham 
-[13] - spymer
-[14] - Recreator Phishing
-[15] - DDOS
-[16] - http tunnels""")
+[12] - kingdish3.0
+[13]- smsham 
+[14] - spymer
+[15] - Recreator Phishing
+[16] - DDOS
+[17] - http tunnels
+[18] - ADB-Toolkit
+[19] - RedHawk
+[20] - Tools
+[21] - Banner
+[22] - ADB-Termux Installer
+[23] - b0mb3r
+[24] - Tool-X""")
 
 
 #deanonymization
@@ -133,24 +139,29 @@ while True:
 	    os.system('clear')
 	    os.chdir('kingfish2-master')
 	    os.system('python3 fsh.py')
-    elif num == ('12'):
+    elif num == ('12') :
+        print (Fore.GREEN + 'Starting kingfish3.0')
+        os.system ('clear')
+        os.chdir ('kingfish3.0')
+        os.system ('python fsh.py')
+    elif num == ('13'):
         print (Fore.GREEN + 'Starting smsham')
         os.system('clear')
         os.chdir('smsham-master')
         os.system('python3 smsham.py')
 
-    elif num == ('13'):
+    elif num == ('14'):
         print(Fore.GREEN+'Starting spymmer')
         os.system('clear')
         os.chdir('spymer-master')
         os.system('python3 spammer.py')
-    elif num == ('14') :
+    elif num == ('15') :
         print (Fore.GREEN + 'Starting Recreator Phishing')
         os.system ('clear')
         os.chdir ('Recreator-Phishing-master')
         os.system ('python3 recreator-phishing.py')
 
-    elif num == ('15'):
+    elif num == ('16'):
         print(Fore.GREEN + 'Starting DDOS')
         os.system('clear')
         os.chdir('DDos')
@@ -162,7 +173,7 @@ while True:
             os.system('python3 443port.py')
         else:
             print(Fore.RED+'RETURN')
-    elif num == ('16'):
+    elif num == ('17'):
         print (Back.WHITE +Fore.BLUE  + '1 - ngrok or 2 - localhost.run')
         while True:
             num = str(input("\033[35m\033[5m[*]"))
@@ -182,7 +193,74 @@ while True:
                 os.system('ssh -R 80:localhost:'+port+' ssh.localhost.run')
             else :
                 print(Fore.RED +'ОШИБКА')
-    else :
-      print(Fore.RED +'ОШИБКА')
+    
+    elif num == ('18') :
+        print (Fore.GREEN + 'Starting ADB-Toolkit')
+        os.system('clear')
+        os.chdir('ADB-Toolkit')
+        print(Fore.GREEN + '[1] - Install [2] - Start ADB-Toolkit')
+        adbtool = int(input(''))
+        if adbtool == (1):
+            os.system('bash install.sh')
+        elif adbtool == (2):
+            os.system('bash ADB-Toolkit.sh')
 
+    elif num == ('19') :
+        print (Fore.GREEN + 'Starting RedHawk')
+        os.system ('clear')
+        os.chdir ('RED_HAWK')
+        os.system ('php rhawk.php')
+    elif num == ('20') :
+        print (Fore.GREEN + 'Starting Tools')
+        os.system ('clear')
+        os.chdir ('toolss')
+        os.system ('python toolss.py')
+    elif num == ('21') :
+        print (Fore.GREEN + 'Starting Banner')
+        os.system ('clear')
+        os.chdir ('Banner')
+        os.system ('bash requirements.sh && bash typoban.sh')
+    elif num == ('22') :
+        os.system('clear')
+        print(Fore.GREEN + 'Starting installer / uninstaller ADB-Termux')
+        os.chdir('Termux-ADB')
+        print(Fore.GREEN + '1 - INSTALL OR 2 - REMOVE')
+        adbinstall = int(input(''))
+        if adbinstall == (1):
+            os.system('bash InstallTools.sh')
+        elif adbinstall == (2):
+            os.system('bash RemoveTools.sh')
+        
+    elif num == ('23') :
+        print(Fore.GREEN + 'Starting b0mb3r')
+        os.system('clear')
+        os.chdir('b0mb3r')
+        print(Fore.GREEN + '[1] - Install b0mb3r [2] - Start b0mb3r')
+        b0mb3r = int(input(''))
+        if b0mb3r == (1):
+            os.system('bash requirements.txt && python setup.py')
+            os.system('clear')
+            os.system('b0mb3r')
+        elif b0mb3r == (2):
+            os.system('clear')
+            os.system('b0mb3r')
+    elif num == ('24') :
+        print(Fore.GREEN + 'Starting Tool-X')
+        os.system('clear')
+        os.chdir('Tool-X')
+        print(Fore.GREEN + '[1] - INSTALL [2] - START')
+        starttoolx = int(input(''))
+        if starttoolx == (1):
+            os.system('chmod +x install && python install.py')
+            os.system('clear')
+        elif starttoolx == (2):
+            os.system('clear')
+            os.system('python Tool-X.py')
+        
+
+        
+
+        
+
+        
 
