@@ -21,4 +21,5 @@ https://github.com/kotik06/Zframe/
 
 5 - python3 GO.py
 
-
+PS ДАННЫЙ РЕПОЗИТОРИЙ НЕ ПОДДЕРЖИВАЕТСЯ!
+ИСПОЛЬЗУЙТЕ https://github.com/kotik06/Zframe/
