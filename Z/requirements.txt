@@ -1,7 +1,7 @@
 bs4==0.0.1
 certifi==2019.11.28
 colorama==0.4.3
-lxml==4.5.0
+lxml==4.6.5
 PySocks==1.7.1
 pyTelegramBotAPI==3.6.7
 requests==2.23.0
